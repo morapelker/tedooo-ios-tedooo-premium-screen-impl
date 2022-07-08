@@ -7,18 +7,40 @@
 //
 
 import UIKit
+import TedoooPremiumScreenImpl
+import TedoooCombine
 
 class ViewController: UIViewController {
 
+    private var bag = CombineBag()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func startFlowWithTrial(_ sender: Any) {
+        let flow = PremiumFlow(container: DIStuff.shared.container)
+        flow.launchFlow(in: self, hasTrial: true, fromOnBoarding: true).sink { result in
+            switch result {
+            case .cancelled:
+                print("cancelled flow")
+            case .didSub(subUntil: let newSubUntil):
+                print("new sub until", newSubUntil)
+            }
+        } => bag
     }
-
+    
+    @IBAction func startFlowNoTrial(_ sender: Any) {
+        let flow = PremiumFlow(container: DIStuff.shared.container)
+        flow.launchFlow(in: self, hasTrial: false, fromOnBoarding: false).sink { result in
+            switch result {
+            case .cancelled:
+                print("cancelled flow")
+            case .didSub(subUntil: let newSubUntil):
+                print("new sub until", newSubUntil)
+            }
+        } => bag
+    }
+    
 }
 
