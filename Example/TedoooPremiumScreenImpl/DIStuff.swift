@@ -29,7 +29,7 @@ class DIStuff {
 
 class DIImplementors: TedoooPremiumApi {
     func validateSubPermissions() -> AnyPublisher<SubInformation, SubError> {
-        return Just(SubInformation.init(monthId: "monthId", yearId: "yearId")).setFailureType(to: SubError.self).eraseToAnyPublisher()
+        return Just(SubInformation.init(monthId: "monthId", yearId: "yearId", hasTrial: true)).setFailureType(to: SubError.self).eraseToAnyPublisher()
     }
     
     func registerSubInformation(_ information: SubInformation) {

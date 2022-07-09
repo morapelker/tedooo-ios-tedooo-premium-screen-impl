@@ -42,7 +42,6 @@ class PremiumViewModel {
             case .finished: break
             }
         } receiveValue: { [weak self] information in
-            print("got information", information)
             self?.api.registerSubInformation(information)
         } => bag
 
