@@ -91,14 +91,14 @@ class PremiumViewController: UIViewController {
         viewYearly.addGestureRecognizer(target: self, selector: #selector(selectedYearly))
         
         viewMonthly.layer.cornerRadius = 8
-        viewMonthly.layer.borderWidth = 2
+        viewMonthly.layer.borderWidth = 3
         viewMonthly.layer.borderColor = UIColor.init(hex: "#2673FF").cgColor
         
         viewPopular.layer.cornerRadius = 8
         viewPopular.backgroundColor = UIColor.init(hex: "#2673FF")
         
         viewYearly.layer.cornerRadius = 8
-        viewYearly.layer.borderWidth = 2
+        viewYearly.layer.borderWidth = 3
         viewYearly.layer.borderColor = UIColor.init(hex: "#F3D35F").cgColor
         
         imgPremium1.layer.cornerRadius = 16
