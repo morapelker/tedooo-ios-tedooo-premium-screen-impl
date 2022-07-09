@@ -227,7 +227,7 @@ class PremiumViewController: UIViewController {
                     }
                 }
             }
-            self.lblPremiumUser.text = String(format: NSLocalizedString("%@ and more from your industry are using Premium!", comment: ""), people.first?.name ?? "")
+            self.lblPremiumUser.text = String(format: NSLocalizedString("%@ and more from your industry are using Premium!", comment: ""), people.last?.name ?? "")
             
         } => bag
     }
