@@ -28,6 +28,14 @@ class DIStuff {
 }
 
 class DIImplementors: TedoooPremiumApi {
+    func validateSubPermissions() -> AnyPublisher<SubInformation, SubError> {
+        return Just(SubInformation.init(monthId: "monthId", yearId: "yearId")).setFailureType(to: SubError.self).eraseToAnyPublisher()
+    }
+    
+    func registerSubInformation(_ information: SubInformation) {
+        print("register", information)
+    }
+    
     
     func startBillingProcess(presentor: UIViewController, plan: PremiumPlan) -> AnyPublisher<BillingProcessResult, Never> {
         print("start billing process", plan)

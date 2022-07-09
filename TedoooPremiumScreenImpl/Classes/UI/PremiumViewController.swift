@@ -82,6 +82,8 @@ class PremiumViewController: UIViewController {
         } => bag
     }
     
+    
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -144,11 +146,6 @@ class PremiumViewController: UIViewController {
         lblEnjoyPremium1.attributedText = enjoyPremiumAttributed
         lblEnjoyPremium2.attributedText = enjoyPremiumAttributed
         
-//        let strikethroughText = NSMutableAttributedString(string: "$ 299.99")
-//        let strikethroughRange = NSRange(location: 0, length: strikethroughText.length)
-//        strikethroughText.addAttribute(.strikethroughStyle, value: 1, range: strikethroughRange)
-//        strikethroughText.addAttribute(.strikethroughColor, value: UIColor.black, range: strikethroughRange)
-//        lblStrikethroughPrice.attributedText = strikethroughText
         lblStrikethroughPrice.text = "$ 299.99"
         
         viewChoosePlan.layer.cornerRadius = 4
