@@ -8,13 +8,11 @@
 import Foundation
 import Swinject
 import Combine
+import TedoooPremiumScreen
+import UIKit
 
-public enum PremiumResult {
-    case didSub(_ vc: UIViewController, _ subUntil: Int64)
-    case cancelled(_ vc: UIViewController)
-}
 
-public class PremiumFlow {
+public class PremiumFlow: TedoooPremiumScreen {
     
     public init(container: Container) {
         DIContainer.shared.registerContainer(container: container)

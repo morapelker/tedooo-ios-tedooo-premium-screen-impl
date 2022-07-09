@@ -8,6 +8,7 @@
 import Foundation
 import Combine
 import TedoooPremiumApi
+import TedoooPremiumScreen
 
 class PremiumViewModel {
  
