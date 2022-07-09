@@ -191,11 +191,11 @@ class PremiumViewController: UIViewController {
                 } else {
                     switch offset {
                     case 0:
-                        self.imgPremium1.image = UIImage(named: "user_placeholder")
+                        self.imgPremium1.image = UIImage(named: "profile_placeholder")
                     case 1:
-                        self.imgPremium2.image = UIImage(named: "user_placeholder")
+                        self.imgPremium2.image = UIImage(named: "profile_placeholder")
                     default:
-                        self.imgPremium3.image = UIImage(named: "user_placeholder")
+                        self.imgPremium3.image = UIImage(named: "profile_placeholder")
                     }
                 }
             }
