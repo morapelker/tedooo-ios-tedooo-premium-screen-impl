@@ -17,15 +17,25 @@ class PremiumViewModel {
     let premiumPeople: AnyPublisher<[PremiumPerson], Never>
     
     private let api: TedoooPremiumApi
+    let fromOnBoarding: Bool
     
-    init(hasTrial: Bool) {
+    init(
+        hasTrial: Bool,
+        fromOnBoarding: Bool
+    ) {
         self.hasTrial = hasTrial
+        self.fromOnBoarding = fromOnBoarding
         self.api = DIContainer.shared.resolve(TedoooPremiumApi.self)
         self.premiumPeople = api.getPremiumPeople()
     }
 
-    func closeTapped() {
-        resultFlow.send(.cancelled)
+    func closeTapped(vc: UIViewController) {
+        resultFlow.send(.cancelled(vc))
+        resultFlow.send(completion: .finished)
     }
     
+    func didSub(_ vc: UIViewController, newSubUntil: Int64) {
+        resultFlow.send(.didSub(vc, newSubUntil))
+        resultFlow.send(completion: .finished)
+    }
 }

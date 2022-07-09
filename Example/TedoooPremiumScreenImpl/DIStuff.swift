@@ -29,9 +29,9 @@ class DIStuff {
 
 class DIImplementors: TedoooPremiumApi {
     
-    func startBillingProcess(presentor: UIViewController, plan: PremiumPlan) -> AnyPublisher<Int64, Never> {
+    func startBillingProcess(presentor: UIViewController, plan: PremiumPlan) -> AnyPublisher<BillingProcessResult, Never> {
         print("start billing process", plan)
-        return Just(0).eraseToAnyPublisher()
+        return Just(.success(100)).eraseToAnyPublisher()
     }
     
     func getPremiumPeople() -> AnyPublisher<[PremiumPerson], Never> {

@@ -10,8 +10,8 @@ import Swinject
 import Combine
 
 public enum PremiumResult {
-    case didSub(subUntil: Int64)
-    case cancelled
+    case didSub(_ vc: UIViewController, _ subUntil: Int64)
+    case cancelled(_ vc: UIViewController)
 }
 
 public class PremiumFlow {
@@ -25,9 +25,18 @@ public class PremiumFlow {
         hasTrial: Bool,
         fromOnBoarding: Bool
     ) -> AnyPublisher<PremiumResult, Never> {
-        let vc = PremiumViewController.instantiate(hasTrial: hasTrial)
+        let vc = PremiumViewController.instantiate(hasTrial: hasTrial, fromOnBoarding: fromOnBoarding)
         viewController.present(vc, animated: true)
         return vc.resultFlow
     }
     
+    public func launchFlow(
+        inNavController navController: UINavigationController,
+        hasTrial: Bool,
+        fromOnBoarding: Bool
+    ) -> AnyPublisher<PremiumResult, Never> {
+        let vc = PremiumViewController.instantiate(hasTrial: hasTrial, fromOnBoarding: fromOnBoarding)
+        navController.pushViewController(vc, animated: true)
+        return vc.resultFlow
+    }
 }

@@ -11,11 +11,13 @@ import Combine
 import TedoooCombine
 import TedoooStyling
 import Kingfisher
+import TedoooPremiumApi
 class PremiumViewController: UIViewController {
     
     private(set) var viewModel: PremiumViewModel!
     private var bag = CombineBag()
     
+    @IBOutlet weak var btnBack: UIImageView!
     @IBOutlet weak var btnSkip: UIButton!
     @IBOutlet weak var imgPremium1: UIImageView!
     @IBOutlet weak var imgPremium2: UIImageView!
@@ -23,7 +25,6 @@ class PremiumViewController: UIViewController {
     @IBOutlet weak var lblPremiumUser: UILabel!
     @IBOutlet weak var btnClose: UIImageView!
     
-    @IBOutlet weak var viewFree: UIView!
     @IBOutlet weak var viewMonthly: UIView!
     @IBOutlet weak var viewPopular: UIView!
     
@@ -31,14 +32,25 @@ class PremiumViewController: UIViewController {
     @IBOutlet weak var lblStrikethroughPrice: UILabel!
     @IBOutlet weak var viewYearly: UIView!
     
-    @IBOutlet weak var lblJoinDescription: UILabel!
+    @IBOutlet weak var lblJoinDescription: UITextView!
     
+    @IBOutlet weak var thinaWidth: NSLayoutConstraint!
+    @IBOutlet weak var thinaLeading: NSLayoutConstraint!
     @IBOutlet weak var lblEnjoyPremium2: UILabel!
     @IBOutlet weak var lblEnjoyPremium1: UILabel!
     
-    static func instantiate(hasTrial: Bool) -> PremiumViewController {
+    
+    @Inject private var api: TedoooPremiumApi
+    
+    static func instantiate(
+        hasTrial: Bool,
+        fromOnBoarding: Bool
+    ) -> PremiumViewController {
         let vc = GPHelper.instantiateViewController(type: PremiumViewController.self)
-        vc.viewModel = PremiumViewModel(hasTrial: hasTrial)
+        vc.viewModel = PremiumViewModel(
+            hasTrial: hasTrial,
+            fromOnBoarding: fromOnBoarding
+        )
         vc.modalPresentationStyle = .overCurrentContext
         return vc
     }
@@ -47,10 +59,33 @@ class PremiumViewController: UIViewController {
         viewModel.resultFlow.eraseToAnyPublisher()
     }
  
+    @objc private func selectedMonthly() {
+        api.startBillingProcess(presentor: self, plan: .monthly).sink { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let newSubUntil):
+                self.viewModel.didSub(self, newSubUntil: newSubUntil)
+            case .cancelled: break
+            }
+        } => bag
+    }
+    
+    @objc private func selectedYearly() {
+        api.startBillingProcess(presentor: self, plan: .yearly).sink { [weak self] result in
+            guard let self = self else { return }
+            switch result {
+            case .success(let newSubUntil):
+                self.viewModel.didSub(self, newSubUntil: newSubUntil)
+            case .cancelled: break
+            }
+        } => bag
+    }
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        Styling.styleShadowView(viewFree, cornerRadius: 8, shadowOffset: .init(width: 0, height: 3), shadowRadius: 10.66, shadowOpacity: 1, shadowColor: .init(red: 0.508, green: 0.508, blue: 0.508, alpha: 0.5))
+        viewMonthly.addGestureRecognizer(target: self, selector: #selector(selectedMonthly))
+        viewYearly.addGestureRecognizer(target: self, selector: #selector(selectedYearly))
         
         viewMonthly.layer.cornerRadius = 8
         viewMonthly.layer.borderWidth = 2
@@ -67,42 +102,81 @@ class PremiumViewController: UIViewController {
         imgPremium2.layer.cornerRadius = 16
         imgPremium3.layer.cornerRadius = 16
         
-        lblJoinDescription.textColor = UIColor.darkGray
+        
         let joinDescription = NSMutableAttributedString(string: "Join Tedooo premiums squad,\nget a FREE month and a 50% discount")
-        let range = joinDescription.mutableString.range(of: "FREE month")
-        joinDescription.addAttribute(.foregroundColor, value: UIColor.black, range: range)
-        joinDescription.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 18), range: range)
         
+        
+        let entireRange = NSRange(location: 0, length: joinDescription.length)
+        joinDescription.addAttribute(.font, value: UIFont.systemFont(ofSize: 16), range: entireRange)
+        joinDescription.addAttribute(.foregroundColor, value: UIColor.init(hex: "#777777"), range: entireRange)
+        
+        let freeMonthRange = joinDescription.mutableString.range(of: "FREE month")
+        joinDescription.addAttribute(.foregroundColor, value: UIColor.black, range: freeMonthRange)
+        joinDescription.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 18), range: freeMonthRange)
+
         let discountRange = joinDescription.mutableString.range(of: "50% discount")
-        
+
         joinDescription.addAttribute(.foregroundColor, value: UIColor.black, range: discountRange)
         joinDescription.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 16), range: discountRange)
         
         lblJoinDescription.attributedText = joinDescription
+        lblJoinDescription.textAlignment = .center
+        
+        if let begin = lblJoinDescription.position(from: lblJoinDescription.beginningOfDocument, offset: freeMonthRange.location) {
+            if let end = lblJoinDescription.position(from: begin, offset: freeMonthRange.length) {
+                if let textRange = lblJoinDescription.textRange(from: begin, to: end) {
+                    let frame = lblJoinDescription.firstRect(for: textRange)
+                    thinaLeading.constant = frame.minX + 12
+                    thinaWidth.constant = frame.width
+                }
+                
+            }
+            
+        }
+        
         
         let enjoyPremiumAttributed = NSMutableAttributedString(string: "Enjoy all of Tedooo's premium features")
         let premiumRange = enjoyPremiumAttributed.mutableString.range(of: "premium")
-        enjoyPremiumAttributed.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 12), range: premiumRange)
+        enjoyPremiumAttributed.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 15), range: premiumRange)
         enjoyPremiumAttributed.addAttribute(.foregroundColor, value: UIColor.black, range: premiumRange)
         
         lblEnjoyPremium1.attributedText = enjoyPremiumAttributed
         lblEnjoyPremium2.attributedText = enjoyPremiumAttributed
         
         let strikethroughText = NSMutableAttributedString(string: "$ 299.99")
-        strikethroughText.addAttribute(.strikethroughStyle, value: 1, range: NSRange(location: 0, length: strikethroughText.length))
+        let strikethroughRange = NSRange(location: 0, length: strikethroughText.length)
+        strikethroughText.addAttribute(.strikethroughStyle, value: 1, range: strikethroughRange)
+        strikethroughText.addAttribute(.strikethroughColor, value: UIColor.black, range: strikethroughRange)
         lblStrikethroughPrice.attributedText = strikethroughText
         
         viewChoosePlan.layer.cornerRadius = 4
         
-        btnClose.addGestureRecognizer(target: self, selector: #selector(closeClicked))
+        if viewModel.fromOnBoarding {
+            btnClose.isHidden = true
+            btnSkip.isHidden = false
+        } else {
+            btnClose.addGestureRecognizer(target: self, selector: #selector(closeClicked))
+            btnClose.isHidden = false
+            btnSkip.isHidden = true
+        }
+        
+        
+        
+        if viewModel.fromOnBoarding {
+            btnBack.isHidden = false
+            btnBack.addGestureRecognizer(target: self, selector: #selector(backClicked))
+        } else {
+            btnBack.isHidden = true
+        }
         
         subscribe()
     }
     
+    @objc private func backClicked() {
+        navigationController?.popViewController(animated: true)
+    }
+    
     private func subscribe() {
-        viewModel.resultFlow.sink { [weak self] _ in
-            self?.dismiss(animated: true)
-        } => bag
         viewModel.premiumPeople.map({$0.shuffled()}).sink { [weak self] people in
             guard let self = self else { return }
             for (offset, person) in people.enumerated() {
@@ -132,7 +206,7 @@ class PremiumViewController: UIViewController {
     }
     
     @IBAction func closeClicked() {
-        self.viewModel.closeTapped()
+        self.viewModel.closeTapped(vc: self)
     }
     
 }

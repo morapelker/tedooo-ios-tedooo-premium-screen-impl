@@ -20,24 +20,39 @@ class ViewController: UIViewController {
     
     @IBAction func startFlowWithTrial(_ sender: Any) {
         let flow = PremiumFlow(container: DIStuff.shared.container)
-        flow.launchFlow(in: self, hasTrial: true, fromOnBoarding: true).sink { result in
-            switch result {
-            case .cancelled:
-                print("cancelled flow")
-            case .didSub(subUntil: let newSubUntil):
-                print("new sub until", newSubUntil)
-            }
-        } => bag
+        let vc = UIViewController()
+        vc.view.backgroundColor = .red
+        let navController = UINavigationController(rootViewController: vc)
+        navController.modalPresentationStyle = .overCurrentContext
+        navController.isNavigationBarHidden = true
+        self.present(navController, animated: true) {
+            flow.launchFlow(inNavController: navController, hasTrial: true, fromOnBoarding: true).sink { result in
+                switch result {
+                case .cancelled(let vc):
+                    let newVc = UIViewController()
+                    newVc.view.backgroundColor = .blue
+                    vc.navigationController?.pushViewController(newVc, animated: true)
+                case .didSub(let vc, let subUntil):
+                    let newVc = UIViewController()
+                    newVc.view.backgroundColor = .green
+                    vc.navigationController?.pushViewController(newVc, animated: true)
+                    print("new sub until", subUntil)
+                }
+            } => self.bag
+        }
+        
     }
     
     @IBAction func startFlowNoTrial(_ sender: Any) {
         let flow = PremiumFlow(container: DIStuff.shared.container)
         flow.launchFlow(in: self, hasTrial: false, fromOnBoarding: false).sink { result in
             switch result {
-            case .cancelled:
-                print("cancelled flow")
-            case .didSub(subUntil: let newSubUntil):
-                print("new sub until", newSubUntil)
+            case .cancelled(let vc):
+                vc.dismiss(animated: true)
+                print("cancelled")
+            case .didSub(let vc, let subUntil):
+                vc.dismiss(animated: true)
+                print("new sub until", subUntil)
             }
         } => bag
     }
