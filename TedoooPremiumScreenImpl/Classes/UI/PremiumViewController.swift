@@ -82,7 +82,44 @@ class PremiumViewController: UIViewController {
         } => bag
     }
     
+    /**override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+     super.viewWillTransition(to: size, with: coordinator)
+     if UIDevice.current.orientation.isLandscape {
+         print("Landscape")
+         imageView.image = UIImage(named: const2)
+     } else {
+         print("Portrait")
+         imageView.image = UIImage(named: const)
+     }
+ }*/
     
+    override func viewWillTransition(to size: CGSize, with coordinator: UIViewControllerTransitionCoordinator) {
+        super.viewWillTransition(to: size, with: coordinator)
+        coordinator.animate(alongsideTransition: nil) { _ in
+            self.updateThina()
+        }
+    }
+    
+    private func updateThina() {
+                
+        guard let freeMonthRange = self.lastRange else { return }
+        
+        
+        lblJoinDescription.layoutIfNeeded()
+        if let begin = lblJoinDescription.position(from: lblJoinDescription.beginningOfDocument, offset: freeMonthRange.location) {
+            if let end = lblJoinDescription.position(from: begin, offset: freeMonthRange.length) {
+                if let textRange = lblJoinDescription.textRange(from: begin, to: end) {
+                    let frame = lblJoinDescription.firstRect(for: textRange)
+                    thinaLeading.constant = frame.minX + 12
+                    thinaWidth.constant = frame.width
+                }
+                
+            }
+            
+        }
+    }
+    
+    private var lastRange: NSRange?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -101,74 +138,76 @@ class PremiumViewController: UIViewController {
         viewYearly.layer.borderWidth = 3
         viewYearly.layer.borderColor = UIColor.init(hex: "#F3D35F").cgColor
         
+        
         imgPremium1.layer.cornerRadius = 16
         imgPremium2.layer.cornerRadius = 16
         imgPremium3.layer.cornerRadius = 16
         
+        let baseFontSize: CGFloat
+        switch UIDevice.current.deviceSize {
+        case .smallIphone:
+            baseFontSize = 13
+        case .bigIphone:
+            baseFontSize = 16
+        case .ipad:
+            baseFontSize = 16
+        }
         
         if viewModel.hasTrial {
             let joinDescription = NSMutableAttributedString(string: "Join Tedooo premiums squad,\nget a FREE month and a 50% discount")
             
             let entireRange = NSRange(location: 0, length: joinDescription.length)
-            joinDescription.addAttribute(.font, value: UIFont.systemFont(ofSize: 16), range: entireRange)
+            joinDescription.addAttribute(.font, value: UIFont.systemFont(ofSize: baseFontSize), range: entireRange)
             joinDescription.addAttribute(.foregroundColor, value: UIColor.init(hex: "#777777"), range: entireRange)
             
             let freeMonthRange = joinDescription.mutableString.range(of: "FREE month")
             joinDescription.addAttribute(.foregroundColor, value: UIColor.black, range: freeMonthRange)
-            joinDescription.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 18), range: freeMonthRange)
-
+            joinDescription.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: baseFontSize + 2), range: freeMonthRange)
+            
             let discountRange = joinDescription.mutableString.range(of: "50% discount")
 
             joinDescription.addAttribute(.foregroundColor, value: UIColor.black, range: discountRange)
-            joinDescription.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 16), range: discountRange)
+            joinDescription.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: baseFontSize), range: discountRange)
+            
+            self.lastRange = freeMonthRange
             
             lblJoinDescription.attributedText = joinDescription
             lblJoinDescription.textAlignment = .center
             
-            if let begin = lblJoinDescription.position(from: lblJoinDescription.beginningOfDocument, offset: freeMonthRange.location) {
-                if let end = lblJoinDescription.position(from: begin, offset: freeMonthRange.length) {
-                    if let textRange = lblJoinDescription.textRange(from: begin, to: end) {
-                        let frame = lblJoinDescription.firstRect(for: textRange)
-                        thinaLeading.constant = frame.minX + 12
-                        thinaWidth.constant = frame.width
-                    }
-                    
-                }
-                
-            }
+            updateThina()
         } else {
             let joinDescription = NSMutableAttributedString(string: "Join Tedooo premiums squad,\nget a 50% discount!")
             
             let entireRange = NSRange(location: 0, length: joinDescription.length)
-            joinDescription.addAttribute(.font, value: UIFont.systemFont(ofSize: 16), range: entireRange)
+            joinDescription.addAttribute(.font, value: UIFont.systemFont(ofSize: baseFontSize), range: entireRange)
             joinDescription.addAttribute(.foregroundColor, value: UIColor.init(hex: "#777777"), range: entireRange)
 
             let discountRange = joinDescription.mutableString.range(of: "50% discount")
 
             joinDescription.addAttribute(.foregroundColor, value: UIColor.black, range: discountRange)
-            joinDescription.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 16), range: discountRange)
+            joinDescription.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: baseFontSize), range: discountRange)
             
             lblJoinDescription.attributedText = joinDescription
             lblJoinDescription.textAlignment = .center
             
-            if let begin = lblJoinDescription.position(from: lblJoinDescription.beginningOfDocument, offset: discountRange.location) {
-                if let end = lblJoinDescription.position(from: begin, offset: discountRange.length) {
-                    if let textRange = lblJoinDescription.textRange(from: begin, to: end) {
-                        let frame = lblJoinDescription.firstRect(for: textRange)
-                        thinaLeading.constant = frame.minX + 12
-                        thinaWidth.constant = frame.width
-                    }
-                    
-                }
-                
-            }
+            self.lastRange = discountRange
+            updateThina()
+            
         }
         
-        
+        let premiumFontSize: CGFloat
+        switch UIDevice.current.deviceSize {
+        case .smallIphone:
+            premiumFontSize = 15
+        case .bigIphone:
+            premiumFontSize = 15
+        case .ipad:
+            premiumFontSize = 17
+        }
         
         let enjoyPremiumAttributed = NSMutableAttributedString(string: "Enjoy all of Tedooo's premium features")
         let premiumRange = enjoyPremiumAttributed.mutableString.range(of: "premium")
-        enjoyPremiumAttributed.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: 15), range: premiumRange)
+        enjoyPremiumAttributed.addAttribute(.font, value: UIFont.boldSystemFont(ofSize: premiumFontSize), range: premiumRange)
         enjoyPremiumAttributed.addAttribute(.foregroundColor, value: UIColor.black, range: premiumRange)
         
         lblEnjoyPremium1.attributedText = enjoyPremiumAttributed
