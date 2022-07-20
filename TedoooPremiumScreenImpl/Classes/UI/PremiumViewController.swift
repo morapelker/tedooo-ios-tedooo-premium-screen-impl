@@ -18,6 +18,7 @@ class PremiumViewController: UIViewController {
     private(set) var viewModel: PremiumViewModel!
     private var bag = CombineBag()
     
+    @IBOutlet weak var imgThina: UIImageView!
     @IBOutlet weak var btnBack: UIImageView!
     @IBOutlet weak var btnSkip: UIButton!
     @IBOutlet weak var imgPremium1: UIImageView!
@@ -110,8 +111,16 @@ class PremiumViewController: UIViewController {
             if let end = lblJoinDescription.position(from: begin, offset: freeMonthRange.length) {
                 if let textRange = lblJoinDescription.textRange(from: begin, to: end) {
                     let frame = lblJoinDescription.firstRect(for: textRange)
-                    thinaLeading.constant = frame.minX + 12
-                    thinaWidth.constant = frame.width
+                    let leading = frame.minX + 12
+                    let width = frame.width
+                    if leading >= 0 && leading <= 10000 && width >= 0 && width <= 10000 {
+                        thinaLeading.constant = leading
+                        thinaWidth.constant = frame.width
+                        imgThina.isHidden = false
+                    } else {
+                        imgThina.isHidden = true
+                    }
+                    
                 }
                 
             }

@@ -700,6 +700,7 @@
                         <outlet property="imgPremium1" destination="nXC-VR-eFx" id="vwF-XG-FsN"/>
                         <outlet property="imgPremium2" destination="CfI-6a-hAG" id="QWX-Ia-c9q"/>
                         <outlet property="imgPremium3" destination="f76-Ye-ldi" id="TQU-1C-TOX"/>
+                        <outlet property="imgThina" destination="Icx-Mb-i05" id="co6-5z-tLt"/>
                         <outlet property="lblEnjoyPremium1" destination="XVR-ID-CRN" id="0tj-J7-cRF"/>
                         <outlet property="lblEnjoyPremium2" destination="VBa-5G-rpd" id="jKT-jv-3Ye"/>
                         <outlet property="lblJoinDescription" destination="Isb-1e-h2X" id="7hq-4U-L5c"/>
