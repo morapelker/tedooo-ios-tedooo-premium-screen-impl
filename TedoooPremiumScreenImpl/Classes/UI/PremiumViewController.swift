@@ -46,12 +46,14 @@ class PremiumViewController: UIViewController {
     
     static func instantiate(
         hasTrial: Bool,
-        fromOnBoarding: Bool
+        fromOnBoarding: Bool,
+        source: String
     ) -> PremiumViewController {
         let vc = GPHelper.instantiateViewController(type: PremiumViewController.self)
         vc.viewModel = PremiumViewModel(
             hasTrial: hasTrial,
-            fromOnBoarding: fromOnBoarding
+            fromOnBoarding: fromOnBoarding,
+            source: source
         )
         vc.modalPresentationStyle = .overCurrentContext
         return vc

@@ -21,9 +21,14 @@ public class PremiumFlow: TedoooPremiumScreen {
     public func launchFlow(
         in viewController: UIViewController,
         hasTrial: Bool,
-        fromOnBoarding: Bool
+        fromOnBoarding: Bool,
+        source: String
     ) -> AnyPublisher<PremiumResult, Never> {
-        let vc = PremiumViewController.instantiate(hasTrial: hasTrial, fromOnBoarding: fromOnBoarding)
+        let vc = PremiumViewController.instantiate(
+            hasTrial: hasTrial,
+            fromOnBoarding: fromOnBoarding,
+            source: source
+        )
         viewController.present(vc, animated: true)
         return vc.resultFlow
     }
@@ -31,9 +36,14 @@ public class PremiumFlow: TedoooPremiumScreen {
     public func launchFlow(
         inNavController navController: UINavigationController,
         hasTrial: Bool,
-        fromOnBoarding: Bool
+        fromOnBoarding: Bool,
+        source: String
     ) -> AnyPublisher<PremiumResult, Never> {
-        let vc = PremiumViewController.instantiate(hasTrial: hasTrial, fromOnBoarding: fromOnBoarding)
+        let vc = PremiumViewController.instantiate(
+            hasTrial: hasTrial,
+            fromOnBoarding: fromOnBoarding,
+            source: source
+        )
         navController.pushViewController(vc, animated: true)
         return vc.resultFlow
     }

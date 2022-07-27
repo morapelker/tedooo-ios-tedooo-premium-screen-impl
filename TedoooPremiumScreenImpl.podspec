@@ -8,7 +8,7 @@
 
 Pod::Spec.new do |s|
   s.name             = 'TedoooPremiumScreenImpl'
-  s.version          = '1.4.0'
+  s.version          = '1.4.1'
   s.summary          = 'TedoooPremiumScreenImpl'
 
 # This description is used to generate tags and improve search results.
@@ -45,6 +45,7 @@ TedoooPremiumScreenImpl
   s.dependency 'TedoooStyling'
   s.dependency 'Kingfisher'
   s.dependency 'TedoooPremiumScreen'
+  s.dependency 'TedoooAnalytics'
   
   # s.public_header_files = 'Pod/Classes/**/*.h'
   # s.frameworks = 'UIKit', 'MapKit'

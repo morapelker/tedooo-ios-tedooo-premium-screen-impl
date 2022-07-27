@@ -10,6 +10,7 @@ import Combine
 import TedoooPremiumApi
 import TedoooPremiumScreen
 import TedoooCombine
+import TedoooAnalytics
 
 class PremiumViewModel {
  
@@ -19,17 +20,25 @@ class PremiumViewModel {
     let premiumPeople: AnyPublisher<[PremiumPerson], Never>
     
     private let api: TedoooPremiumApi
+    private let analytics: TedoooAnalytics
+    
     let fromOnBoarding: Bool
     let hasSubError = PassthroughSubject<SubError, Never>()
     private var bag = CombineBag()
+    private let source: String
     
     init(
         hasTrial: Bool,
-        fromOnBoarding: Bool
+        fromOnBoarding: Bool,
+        source: String
     ) {
         self.hasTrial = hasTrial
+        self.source = source
         self.fromOnBoarding = fromOnBoarding
+        
         self.api = DIContainer.shared.resolve(TedoooPremiumApi.self)
+        self.analytics = DIContainer.shared.resolve(TedoooAnalytics.self)
+        
         self.premiumPeople = api.getPremiumPeople()
         self.fetchInformation()
     }
@@ -53,6 +62,7 @@ class PremiumViewModel {
     }
     
     func didSub(_ vc: UIViewController, newSubUntil: Int64) {
+        analytics.logEvent("didSub", payload: ["source": source])
         resultFlow.send(.didSub(vc, newSubUntil))
         resultFlow.send(completion: .finished)
     }

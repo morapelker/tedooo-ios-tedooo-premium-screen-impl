@@ -26,7 +26,7 @@ class ViewController: UIViewController {
         navController.modalPresentationStyle = .overCurrentContext
         navController.isNavigationBarHidden = true
         self.present(navController, animated: true) {
-            flow.launchFlow(inNavController: navController, hasTrial: true, fromOnBoarding: true).sink { result in
+            flow.launchFlow(inNavController: navController, hasTrial: true, fromOnBoarding: true, source: "asd").sink { result in
                 switch result {
                 case .cancelled(let vc):
                     let newVc = UIViewController()
@@ -45,7 +45,7 @@ class ViewController: UIViewController {
     
     @IBAction func startFlowNoTrial(_ sender: Any) {
         let flow = PremiumFlow(container: DIStuff.shared.container)
-        flow.launchFlow(in: self, hasTrial: false, fromOnBoarding: false).sink { result in
+        flow.launchFlow(in: self, hasTrial: false, fromOnBoarding: false, source: "asd").sink { result in
             switch result {
             case .cancelled(let vc):
                 vc.dismiss(animated: true)

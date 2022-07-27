@@ -327,6 +327,7 @@
 				"${PODS_ROOT}/Target Support Files/Pods-TedoooPremiumScreenImpl_Example/Pods-TedoooPremiumScreenImpl_Example-frameworks.sh",
 				"${BUILT_PRODUCTS_DIR}/Kingfisher/Kingfisher.framework",
 				"${BUILT_PRODUCTS_DIR}/Swinject/Swinject.framework",
+				"${BUILT_PRODUCTS_DIR}/TedoooAnalytics/TedoooAnalytics.framework",
 				"${BUILT_PRODUCTS_DIR}/TedoooCombine/TedoooCombine.framework",
 				"${BUILT_PRODUCTS_DIR}/TedoooPremiumApi/TedoooPremiumApi.framework",
 				"${BUILT_PRODUCTS_DIR}/TedoooPremiumScreen/TedoooPremiumScreen.framework",
@@ -337,6 +338,7 @@
 			outputPaths = (
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Kingfisher.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Swinject.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TedoooAnalytics.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TedoooCombine.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TedoooPremiumApi.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/TedoooPremiumScreen.framework",
