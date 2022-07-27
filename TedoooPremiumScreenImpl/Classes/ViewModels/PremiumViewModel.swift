@@ -38,6 +38,7 @@ class PremiumViewModel {
         
         self.api = DIContainer.shared.resolve(TedoooPremiumApi.self)
         self.analytics = DIContainer.shared.resolve(TedoooAnalytics.self)
+        self.analytics.logEvent("viewed_premium_screen", payload: ["source": source])
         
         self.premiumPeople = api.getPremiumPeople()
         self.fetchInformation()
@@ -62,7 +63,7 @@ class PremiumViewModel {
     }
     
     func didSub(_ vc: UIViewController, newSubUntil: Int64) {
-        analytics.logEvent("didSub", payload: ["source": source])
+        analytics.logEvent("did_sub", payload: ["source": source])
         resultFlow.send(.didSub(vc, newSubUntil))
         resultFlow.send(completion: .finished)
     }
